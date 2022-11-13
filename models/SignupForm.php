@@ -3,7 +3,7 @@
 namespace app\models;
 use yii\base\Model;
 
-class SignupForm  extends CFormModel {
+class SignupForm {
 
     public $username;
     public $password;

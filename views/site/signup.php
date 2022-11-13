@@ -1,13 +1,13 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var app\models\LoginForm $model */
+/** @var app\models\SignupForm $model */
 
 use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Html;
+use yii\helpers\Html;
+
+
 ?>
- <?php $form = ActiveForm::begin() ?>
+<?php $form = ActiveForm::begin() ?>
 <?= $form->field($model,'username')?>
 <?= $form->field($model,'password')?>
 
