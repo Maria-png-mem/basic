@@ -1,6 +1,6 @@
 <?php
 $log = '10190190';
-$pass= 'ee5WKvbmmNkS';
+$pass= 'ee5WKvbNkS';
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, 'https://portal.petrocollege.ru/');
@@ -18,6 +18,8 @@ if (curl_errno($ch)) {
     echo "No ok";
 } else {
     echo "ok";
+
+
 }
 curl_close($ch);
 

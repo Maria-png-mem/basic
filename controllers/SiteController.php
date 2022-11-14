@@ -4,12 +4,19 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\SignupForm;
+use app\models\UserIdentity;
+use app\models\GroupNumber;
+use app\models\UserHasGroup;
+
+
+use function Psy\debug;
 
 class SiteController extends Controller
 {
@@ -60,10 +67,34 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $this->setMeta('Регистрация');
         $model = new SignupForm();
+        if( $model ->load(Yii::$app->request->post()) && $model->validate()){
+            $user = new UserIdentity();
 
-        return $this->render('signup',compact('model'));
+
+            $user->username = $model->username;
+            $user->password = $model->password;
+            $user->save();
+            $group = new UserHasGroup();
+            $group->id_user=$user->id;
+            $group->id_group=$model->group_id;
+            var_dump($group);
+            $group->save();
+            VarDumper::dump($user->errors,10,true);
+
+//            $user ->password = Yii::$app->security->generatePasswordHash($model->password);
+            if($user->save()){
+              Yii::$app->user->login($user);
+//                 var_dump(  $user->password );
+//
+                return $this->goHome();
+
+            }
+
+
+        }
+
+        return $this->render('signup',['model' => $model]);
 
     }
     /**
@@ -73,6 +104,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         return $this->render('index');
     }
 

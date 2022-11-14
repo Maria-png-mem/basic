@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+
 class UserIdentity extends User implements \yii\web\IdentityInterface
 
 {
@@ -34,7 +35,7 @@ class UserIdentity extends User implements \yii\web\IdentityInterface
     {
         
 
-        return static::findOne(['login'=>$username]);
+        return static::findOne(['username'=>$username]);
     }
 
     /**

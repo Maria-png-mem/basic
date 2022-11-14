@@ -38,8 +38,8 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['id_role', 'id_spec'], 'integer'],
-            [['username', 'login'], 'required'],
-            [['auth_key', 'access_token', 'username', 'login'], 'string', 'max' => 32],
+            [['username'], 'required'],
+            [['auth_key', 'access_token', 'username'], 'string', 'max' => 32],
             [['password'], 'string', 'max' => 70],
             [['avatar'], 'string', 'max' => 500],
             [['id_role'], 'exist', 'skipOnError' => true, 'targetClass' => Role::class, 'targetAttribute' => ['id_role' => 'id']],
@@ -60,7 +60,6 @@ class User extends \yii\db\ActiveRecord
             'access_token' => 'Access Token',
             'username' => 'Username',
             'password' => 'Password',
-            'login' => 'Login',
             'avatar' => 'Avatar',
         ];
     }
