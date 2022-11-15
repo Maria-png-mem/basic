@@ -12,16 +12,17 @@ use Yii;
  * @property int|null $id_spec
  * @property string|null $auth_key
  * @property string|null $access_token
- * @property string $username
+ * @property string|null $username
  * @property string|null $password
- * @property string $login
  * @property string|null $avatar
- ** @property string|null $name
+ * @property string|null $name
+ *
  * @property Role $role
  * @property Specialty $spec
+ * @property UserHasGroup[] $userHasGroups
  * @property Work[] $works
  */
-class User extends \yii\db\ActiveRecord
+class TestUser extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -38,7 +39,6 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['id_role', 'id_spec'], 'integer'],
-            [['username',], 'required'],
             [['auth_key', 'access_token', 'username'], 'string', 'max' => 32],
             [['password'], 'string', 'max' => 70],
             [['avatar'], 'string', 'max' => 500],
@@ -62,8 +62,7 @@ class User extends \yii\db\ActiveRecord
             'username' => 'Username',
             'password' => 'Password',
             'avatar' => 'Avatar',
-            'name' => 'name',
-
+            'name' => 'Name',
         ];
     }
 
@@ -85,6 +84,16 @@ class User extends \yii\db\ActiveRecord
     public function getSpec()
     {
         return $this->hasOne(Specialty::class, ['id' => 'id_spec']);
+    }
+
+    /**
+     * Gets query for [[UserHasGroups]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserHasGroups()
+    {
+        return $this->hasMany(UserHasGroup::class, ['id_user' => 'id']);
     }
 
     /**

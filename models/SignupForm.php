@@ -2,8 +2,9 @@
 
 namespace app\models;
 use yii\base\Model;
+use yii\web\IdentityInterface;
 
-class SignupForm extends Model {
+class SignupForm extends Model  {
 
     public $username;
     public $password;
@@ -24,8 +25,8 @@ class SignupForm extends Model {
     public function attributeLabels()
     {
         return [
-            'username' => 'ИМЯ',
-            'password' => 'пАРОЛЬ',
+            'username' => 'ФИО',
+            'password' => 'Пароль',
             'group_id' => 'Группа',
 
 

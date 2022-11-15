@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Codeception\Constraint\Page;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
@@ -12,7 +13,6 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\SignupForm;
 use app\models\UserIdentity;
-use app\models\GroupNumber;
 use app\models\UserHasGroup;
 
 
@@ -117,15 +117,53 @@ class SiteController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
+        }else{
+           /* запуск проверки сдо*/
+          /*  его данные форму
+            модель сингап
+            передам сохраню*/
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post())) {
+                $ch = curl_init();
+//                $model->load(Yii::$app->request->post()) && $model->login();
+                curl_setopt($ch, CURLOPT_URL, 'https://portal.petrocollege.ru/');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                curl_setopt($ch, CURLOPT_UNRESTRICTED_AUTH, true);
+
+                curl_setopt($ch, CURLOPT_USERPWD, ($model['username'] . ':' . $model['password']));
+//
+                $result = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    echo 'Error:' . curl_error($ch);
+                } elseif ($result == "") {
+                    echo '<script>alert("Введите логин/пароль от СДО")</script>';
+                } else {
+                    echo '<script>alert("Добро пожаловать")</script>';
+                    $user_sdo = new UserIdentity();
+//
+                    if(!UserIdentity::findByUsername($model['username'])){
+                        $user_sdo->username = $model['username'];
+                        $user_sdo->password = $model->password;
+                        $user_sdo->name = $model->name;
+                        $user_sdo->save();
+                        $group = new UserHasGroup();
+                        $group->id_user=$user_sdo->id;
+                        $group->id_group=$model->group_id;
+                        $group->save();
+                        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                            return $this->goHome();
+                        }
+                    }  if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                        return $this->goHome();
+                    }
+                }
+                curl_close($ch);
+            }
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
+       return $this->render('login', [
             'model' => $model,
         ]);
     }

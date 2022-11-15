@@ -1,4 +1,5 @@
 <?php
+/** @var app\models\LoginForm $model */
 $log = '10190190';
 $pass= 'ee5WKvbNkS';
 $ch = curl_init();
@@ -17,7 +18,7 @@ if (curl_errno($ch)) {
 } elseif ($result == "") {
     echo "No ok";
 } else {
-    echo "ok";
+    header('Location: signup.php');
 
 
 }

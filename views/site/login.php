@@ -6,14 +6,17 @@
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+use yii\helpers\ArrayHelper;
 
-$this->title = 'Login';
+
+$this->title = 'Добрый день';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <p>У вас еще нет аккаунта?</p>     <input class="btn btn-primary" id="click-to-hide-2" type="button" value="Зарегистрироваться">
+
 
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
@@ -29,21 +32,44 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>
+    <div class="wpcraft-box-2 hide-element"><?= $form->field($model, 'name')->textInput() ?>
+        <?= $form->field($model, 'group_id')->dropDownList(ArrayHelper::map(\app\models\GroupNumber::find()->all(), 'id','name')) ?></div>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"offset-lg-1 col-lg-3 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
+
+
+
 
         <div class="form-group">
-            <div class="offset-lg-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <div class="col-lg-11">
+                <?= $form->field($model, 'rememberMe')->checkbox([
+                    'template' => "<div class=\" custom-control custom-checkbox\">{input} Запомнить меня</div>\n<div class=\"col-lg-8\">{error}</div>",
+                ]) ?>
+                <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
             </div>
         </div>
 
     <?php ActiveForm::end(); ?>
 
-    <div class="offset-lg-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-    </div>
+
 </div>
+<style>
+    .hide-element {display: none ;}
+</style>
+<script>
+    /* Вешаем обработчик клика на кнопку */
+    var clickToHide2 = document.querySelector('#click-to-hide-2');
+    clickToHide2.addEventListener("click", hideVisibleElem);
+
+    /* Функция добавления / удаления класса, который скрывает элемент */
+    function hideVisibleElem() {
+        let wpcraftBox2 = document.querySelector('.wpcraft-box-2');
+        wpcraftBox2.classList.toggle("hide-element");
+
+        /* В зависимости от наличия скрывающего класса меняем текст в кнопке */
+        if (wpcraftBox2.classList.contains("hide-element")){
+            clickToHide2.value = 'Зарегистрироваться';
+        } else {
+            clickToHide2.value = 'Авторизироваться';
+        }
+    }
+</script>
